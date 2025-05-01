@@ -113,5 +113,43 @@ namespace Restaurante.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+
+        //Método para apagar pedido que recebe um número de pedido
+        [HttpDelete("ApagarPedido")]
+        public IActionResult ApagarPedido(int numeroPedido)
+        {
+            try
+            {
+                // Cria uma variável do tipo pedido para armazenar o pedidoEncontrado
+                Pedido? pedidoEncontrado = null; 
+                //Verifica os itens na lista de pedidod
+                foreach (Pedido pedido in ArmazenarPedidos)
+                {
+                    //Verifica se o pedido que está sendo visto na lista tem o
+                    //mesmo número de pedido passado no parâmetro
+                    if(pedido.NumeroPedido == numeroPedido) 
+                    {
+                        //Se tiver, atribui a variável pedidoEncontrado, que vira um objeto
+                        pedidoEncontrado = pedido;
+                    }
+                }
+                //Se encontrou um pedido com aquele número, ele remove o pedido da lista
+                if (pedidoEncontrado != null)
+                {
+                    ArmazenarPedidos.Remove(pedidoEncontrado);
+                    return StatusCode(200, "Pedido excluído!");
+                }
+                else
+                {
+                    return StatusCode(400, "Número do pedido não foi encontrado!");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                //Caso ocorra uma exceção, retornamos um código de erro com a mensagem da exceção
+                return StatusCode(500, ex.Message);
+            }
+        }
     }
 }
